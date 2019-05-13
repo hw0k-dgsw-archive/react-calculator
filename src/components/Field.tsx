@@ -3,13 +3,22 @@ import styled from 'styled-components';
 
 interface IFieldProps {
   value: number;
+  stored: number;
+  currentOp: Operator;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const S = {
   Wrapper: styled.div`
     display: flex;
-    flex-wrap: wrap;
+    flex-flow: column wrap;
+  `,
+  Text: styled.div`
+    background-color: var(--oc-white);
+    padding: 0.5rem 0.7rem;
+    text-align: right;
+    font-size: 0.75em;
+    color: var(--oc-gray-6);
   `,
   Input: styled.input`
     flex: 1;
@@ -25,14 +34,21 @@ const S = {
     }
 
     border: 0;
-    padding: 2rem 0.7rem 0.5rem;
+    padding: 1rem 0.7rem 0.5rem;
   `
 };
 
 const Field: React.FC<IFieldProps> = (props) => {
-  const { value, onChange } = props;
+  const { value, stored, currentOp, onChange } = props;
   return (
     <S.Wrapper>
+      <S.Text>
+        {
+          currentOp !== '?'
+            ? `${stored} ${currentOp}`
+            : 'ㅤ'
+        }
+      </S.Text>
       <S.Input type="number" value={value} onChange={onChange} />
     </S.Wrapper>
   );

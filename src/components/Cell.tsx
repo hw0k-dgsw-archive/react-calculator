@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 interface ICellProps {
   text: string;
-  onClick?: any
+  onClick?: () => void
 }
 
 const Wrapper = styled.div`
