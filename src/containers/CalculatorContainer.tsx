@@ -50,11 +50,46 @@ class CalculatorContainer extends React.Component<{}, ICalculatorState> {
   }
 
   handleOperatorClick = (operator: Operator) => {
-    const storedValue = this.state.value;
+    const { value, stored, currentOp } = this.state;
+
+    if (currentOp !== '?') {
+      this.setState({
+        value: 0,
+        stored: eval(`${stored} ${currentOp} ${value}`),
+        currentOp: operator
+      });
+    }
+    else {
+      this.setState({
+        value: 0,
+        stored: value,
+        currentOp: operator
+      });
+    }
+  }
+
+  handleRemove = () => {
+    const valueStr = this.state.value.toString();
+
     this.setState({
-      value: 0,
-      stored: storedValue,
-      currentOp: operator
+      ...this.state,
+      value: valueStr.length === 1
+        ? 0
+        : parseInt(valueStr.substring(0, valueStr.length - 1))
+    });
+  }
+
+  handlePoint = () => {
+    alert('추후 구현할 예정');
+  }
+
+  handleOperate = () => {
+    const { value, stored, currentOp } = this.state;
+
+    this.setState({
+      value: eval(`${stored} ${currentOp} ${value}`),
+      stored: 0,
+      currentOp: '?'
     });
   }
   
@@ -68,7 +103,7 @@ class CalculatorContainer extends React.Component<{}, ICalculatorState> {
           <Grid>
             <Cell text="CE" onClick={() => this.setState({...this.state, value: 0})} />
             <Cell text="C" onClick={() => this.setState({value: 0, stored: 0, currentOp: '?'})} />
-            <Cell text="<-" />
+            <Cell text="<-" onClick={() => this.handleRemove()} />
             <Cell text="/" onClick={() => this.handleOperatorClick('/')} />
             <Cell text="7" onClick={() => this.handleNumberClick(7)} />
             <Cell text="8" onClick={() => this.handleNumberClick(8)} />
@@ -82,10 +117,10 @@ class CalculatorContainer extends React.Component<{}, ICalculatorState> {
             <Cell text="2" onClick={() => this.handleNumberClick(2)} />
             <Cell text="3" onClick={() => this.handleNumberClick(3)} />
             <Cell text="+" onClick={() => this.handleOperatorClick('+')} />
-            <Cell text="±" onClick={() => this.handleNumberClick(3)} />
+            <Cell text="±" onClick={() => this.setState({...this.state, value: -value})} />
             <Cell text="0" onClick={() => this.handleNumberClick(0)} />
-            <Cell text="." />
-            <Cell text="=" />
+            <Cell text="." onClick={() => this.handlePoint()} />
+            <Cell text="=" onClick={() => this.handleOperate()} />
           </Grid>
         </Wrapper>
         <Text isWeak={true}>Made by hw0k</Text>
